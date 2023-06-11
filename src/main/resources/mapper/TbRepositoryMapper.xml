@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.youfan.repository.mapper.TbRepositoryMapper">
+    <resultMap id="BaseResultMap" type="com.youfan.repository.domain.TbRepository">
+        <!--@mbg.generated-->
+        <!--@Table tb_repository-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="commodity_id" jdbcType="INTEGER" property="commodityId"/>
+        <result column="number" jdbcType="INTEGER" property="number"/>
+        <result column="repository_time" jdbcType="TIMESTAMP" property="repositoryTime"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, commodity_id, `number`, repository_time, `type`, user_id
+    </sql>
+    <select id="selectByType" resultType="com.youfan.repository.vo.CommodityRepository">
+        SELECT
+            tc.`repository` repository,
+            tc.`coding` coding,
+            tc.`category` category,
+            tc.`name` NAME,
+            tc.`model` model,
+            tc.`unit` unit,
+            tr.`number` number,
+            tr.`repository_time` repositoryTime ,
+            tu.username
+        FROM
+            tb_repository tr
+                LEFT JOIN tb_commodity tc ON tc.`id` = tr.`commodity_id`
+                left join tb_user tu on tu.id = tr.user_id
+        WHERE
+            tr.`type` = #{type}
+    </select>
+</mapper>

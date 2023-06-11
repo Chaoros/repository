@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.youfan.repository.mapper.TbCommodityMapper">
+  <resultMap id="BaseResultMap" type="com.youfan.repository.domain.TbCommodity">
+    <!--@mbg.generated-->
+    <!--@Table tb_commodity-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="repository" jdbcType="VARCHAR" property="repository" />
+    <result column="coding" jdbcType="INTEGER" property="coding" />
+    <result column="category" jdbcType="VARCHAR" property="category" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="model" jdbcType="VARCHAR" property="model" />
+    <result column="unit" jdbcType="VARCHAR" property="unit" />
+    <result column="number" jdbcType="INTEGER" property="number" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, repository, coding, category, `name`, model, unit, `number`
+  </sql>
+    <select id="selectPieByCategory" resultType="com.youfan.repository.vo.PieCharts">
+      select
+        category name,
+        SUM(number) value
+      from
+        tb_commodity
+      group by category
+    </select>
+    <select id="selectLineChartsByRepository" resultType="com.youfan.repository.vo.PieCharts">
+      select
+      DATE_FORMAT(
+      tb_repository.`repository_time`,
+      '%Y-%m-%d'
+      ) name,
+      SUM(tb_commodity.`number`) value
+      from
+      tb_repository,
+      tb_commodity
+      where tb_repository.`commodity_id` = tb_commodity.`id`
+      and tb_repository.`repository_time` &gt; #{startDate}
+      and tb_repository.`repository_time` &lt; #{endDate}
+      group by DATE_FORMAT(
+      tb_repository.`repository_time`,
+      '%Y-%m-%d'
+      )
+    </select>
+</mapper>
